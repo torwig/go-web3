@@ -133,6 +133,19 @@ func (e *Eth) SendTransaction(txn *eTypes.Transaction) (common.Hash, error) {
 	return hash, err
 }
 
+// SendSignedRawTransaction sends raw signed transaction.
+func (e *Eth) SendSignedRawTransaction(txn *eTypes.Transaction) (common.Hash, error) {
+	var hash common.Hash
+
+	txData, err := txn.MarshalBinary()
+	if err != nil {
+		return hash, err
+	}
+
+	err = e.c.Call("eth_sendRawTransaction", &hash, hexutil.Encode(txData))
+	return hash, err
+}
+
 // Get transaction by transaction hash
 func (e *Eth) GetTransactionByHash(hash common.Hash) (*eTypes.Transaction, error) {
 	var tx *eTypes.Transaction
